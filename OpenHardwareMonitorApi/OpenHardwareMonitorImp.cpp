@@ -126,7 +126,7 @@ namespace OpenHardwareMonitorApi
             if (hardware->Sensors[i]->SensorType == SensorType::Clock)
             {
                 String^ name = hardware->Sensors[i]->Name;
-                // edit by ling 这里改为只有 1-6 核才去计算频率
+                // edit by ling 这里改为只有 1-6 核才去计算频率 ，只处理大核
                 if (name == L"CPU Core #1" || name == L"CPU Core #2" || name == L"CPU Core #3" || name == L"CPU Core #4" || name == L"CPU Core #5" || name == L"CPU Core #6")
                     m_all_cpu_clock[ClrStringToStdWstring(name)] = Convert::ToDouble(hardware->Sensors[i]->Value);
             }
@@ -134,7 +134,8 @@ namespace OpenHardwareMonitorApi
         float sum{};
         for (auto i : m_all_cpu_clock)
             sum += i.second;
-        freq = sum / 6 / 1000.0;
+        // edit by ling ，超外频 1.029
+        freq = sum * 1.029 / 6 / 1000.0 ;
 
 
         return true;
