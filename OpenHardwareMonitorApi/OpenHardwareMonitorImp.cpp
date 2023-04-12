@@ -1,7 +1,6 @@
 ﻿// 这是主 DLL 文件。
 
 #include "stdafx.h"
-#include <regex>
 
 #include "OpenHardwareMonitorImp.h"
 #include <vector>
@@ -128,8 +127,7 @@ namespace OpenHardwareMonitorApi
             {
                 String^ name = hardware->Sensors[i]->Name;
                 // edit by ling 这里改为只有 1-6 核才去计算频率
-                static const std::regex pattern(R"(CPU Core #[1-6])");
-                if (std::regex_search(name, pattern))
+                if (name == L"CPU Core #1" || name == L"CPU Core #2" || name == L"CPU Core #3" || name == L"CPU Core #4" || name == L"CPU Core #5" || name == L"CPU Core #6")
                     m_all_cpu_clock[ClrStringToStdWstring(name)] = Convert::ToDouble(hardware->Sensors[i]->Value);
             }
         }
