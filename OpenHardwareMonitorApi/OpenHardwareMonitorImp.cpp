@@ -126,23 +126,18 @@ namespace OpenHardwareMonitorApi
             if (hardware->Sensors[i]->SensorType == SensorType::Clock)
             {
                 String^ name = hardware->Sensors[i]->Name;
-                if (name != L"Bus Speed")
+                // edit by ling 这里改为只有 1-6 核才去计算频率
+                static const std::regex pattern(R"(CPU Core #[1-6])");
+                if (std::regex_search(name, pattern))
                     m_all_cpu_clock[ClrStringToStdWstring(name)] = Convert::ToDouble(hardware->Sensors[i]->Value);
             }
         }
-//         float sum{};
-//         for (auto i : m_all_cpu_clock)
-//             sum += i.second;
-//         freq = sum / m_all_cpu_clock.size() / 1000.0;
-        // edit by lingyired & ChatGPT
-        // 这里改为计算最大频率
-        float max_freq = 0;
+        float sum{};
         for (auto i : m_all_cpu_clock)
-        {
-            if (i.second > max_freq)
-                max_freq = i.second;
-        }
-        freq = max_freq / 1000.0;
+            sum += i.second;
+        freq = sum / 6 / 1000.0;
+
+
         return true;
     }
     bool COpenHardwareMonitor::GetHardwareTemperature(IHardware^ hardware, float& temperature)
