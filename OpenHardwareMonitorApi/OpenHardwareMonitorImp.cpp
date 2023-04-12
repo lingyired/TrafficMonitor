@@ -130,10 +130,19 @@ namespace OpenHardwareMonitorApi
                     m_all_cpu_clock[ClrStringToStdWstring(name)] = Convert::ToDouble(hardware->Sensors[i]->Value);
             }
         }
-        float sum{};
+//         float sum{};
+//         for (auto i : m_all_cpu_clock)
+//             sum += i.second;
+//         freq = sum / m_all_cpu_clock.size() / 1000.0;
+        // edit by lingyired & ChatGPT
+        // 这里改为计算最大频率
+        float max_freq = 0;
         for (auto i : m_all_cpu_clock)
-            sum += i.second;
-        freq = sum / m_all_cpu_clock.size() / 1000.0;
+        {
+            if (i.second > max_freq)
+                max_freq = i.second;
+        }
+        freq = max_freq / 1000.0;
         return true;
     }
     bool COpenHardwareMonitor::GetHardwareTemperature(IHardware^ hardware, float& temperature)
