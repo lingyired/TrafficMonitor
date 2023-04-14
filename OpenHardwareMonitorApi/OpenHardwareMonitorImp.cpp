@@ -135,7 +135,7 @@ namespace OpenHardwareMonitorApi
         for (auto i : m_all_cpu_clock)
             sum += i.second;
         // edit by ling ，超外频 1.029
-        freq = sum * 1.11 / 6 / 1000.0 ;
+        freq = sum * 1.12 / 6 / 1000.0 ;
 
 
         return true;
